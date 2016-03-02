@@ -2,7 +2,6 @@
 
 set -ev
 
-cd source
 
 "$ORACLE_HOME/bin/sqlplus" -L -S / AS SYSDBA <<SQL
 @code/create_owner.sql
