@@ -8,3 +8,5 @@ create user utc identified by utc
 
 grant connect, resource to utc;
 grant create view to utc;
+
+grant execute on UTL_FILE to utc;
