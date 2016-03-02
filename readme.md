@@ -1,39 +1,38 @@
 [![Build Status](https://travis-ci.org/Shoelace/utPLSQL.svg?branch=travis_ci)](https://travis-ci.org/Shoelace/utPLSQL)
 
-
 ====================================================================
 Welcome to utPLSQL, the unit testing framework for PL/SQL
 ====================================================================
 
-Copyright (c) 2000-2005, 2014-2015 Steven Feuerstein and the utPLSQL Project
+README for Core Directory
 
-You have downloaded utPLSQL. 
 
-It is not warranted to be free of bugs. 
+Files in this directory:
+------------------------
+code          - Directory of source code
+docs          - Directory of documentation
+examples      - Directory of examples
+test          - Directory of unit tests
+install.LST   - Sample results from a quick install
+install.sql   - Quick install script
+run_test.LST  - Sample results from the example test
+uninstall.LST - Sample results from a quick uninstall
+uninstall.sql - Quick uninstall script
 
-Use it at your own risk (but, believe me, there's nothing very risky about it).
+---------------------------------
+Example sequences run in SQL*Plus
+---------------------------------
 
-TO INSTALL
+Quick Install:
+--------------
+sqlplus system @install.sql
 
-1. Unzip the software into the directory of your choice. It will create three 
-sub-directories: Code, Examples and Doc.
 
-2. Open the Doc/index.html file and follow instructions in the Getting Started 
-document for either installing or upgrading utPLSQL.
+Quick Test Example:
+-------------------
+sqlplus utc/utc @examples/run_test.sql
 
-TO USE
 
-Review the on-line documentation. Start with Getting Started, then check out
-Build Test Packages and dip into the User Guide as needed. 
-
-Any questions? Go to the utPLSQL Support page at 
-
-https://sourceforge.net/projects/utplsql/support
-
-and let us know about it.
-
-  
-Thanks, 
-Steven Feuerstein
-
-$Id$
+Quick Uninstall:
+----------------
+sqlplus system @uinstall.sql

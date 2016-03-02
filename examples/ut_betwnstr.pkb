@@ -1,5 +1,13 @@
-CREATE OR REPLACE PACKAGE BODY ut_betwnstr
+create or replace PACKAGE BODY ut_betwnstr
 IS
+   PROCEDURE utplsql_init
+   IS
+   BEGIN
+      utcodecoverage.set_dout(dout_name_in  => 'betwnstr'
+                             ,dout_type_in  => 'function'
+                             ,dout_owner_in => user);
+   END utplsql_init;
+
    PROCEDURE ut_setup
    IS
    BEGIN
@@ -43,7 +51,7 @@ IS
       
       -- Define "control" operation for "zero start"
        
-      against_this := 'abc';
+      against_this := 'ab';  -- 'abc';
        
       -- Execute test code for "zero start"
        
@@ -118,5 +126,11 @@ IS
       -- End of test for "null end"
    END ut_BETWNSTR;
 
+   PROCEDURE ut_throw_error
+   IS
+      num   number;
+   BEGIN
+      num := 1/0;
+   END ut_throw_error;
+
 END ut_betwnstr;
-/
