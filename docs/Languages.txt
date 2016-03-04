@@ -113,10 +113,8 @@ Format: 1.52
 # languages [at] naturaldocs [dot] org.
 
 
+#add some extensions
 Language: oracle
 
    Extensions: pkb pks
-   Line Comment: --
-   Block Comment: /* */
-   Package Separator: .
-   Prototype Enders: IS AS
+
