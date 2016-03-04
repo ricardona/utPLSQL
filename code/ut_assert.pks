@@ -24,11 +24,6 @@ You should have received a copy of the GNU General Public License
 along with this program (see license.txt); if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ************************************************************************
-$Log$
-Revision 1.2  2003/07/01 19:36:46  chrisrimmer
-Added Standard Headers
-Revision 3.0  2106/04/04 Duane Dieterich
-Converted to v3
 
 ************************************************************************/
 
@@ -40,7 +35,19 @@ Converted to v3
    TYPE value_name_tt IS
       TABLE OF value_name_rt
       INDEX BY BINARY_INTEGER;
+/*
+   Function: version
 
+   returns the version of this package
+
+   Parameters:
+
+
+   Returns:
+
+      version as string
+
+*/
    function version
       return varchar2;
 
@@ -86,6 +93,22 @@ Converted to v3
       raise_exc_in      IN   BOOLEAN := FALSE);
 
    -- String Inputs Overload
+/*
+   Function: eq
+
+   assert equality of 2 strings
+
+   Parameters:
+
+      msg_in            IN   VARCHAR2,
+      check_this_in     IN   VARCHAR2,
+      against_this_in   IN   VARCHAR2,
+      null_ok_in        IN   BOOLEAN := FALSE,
+      raise_exc_in      IN   BOOLEAN := FALSE
+
+	  Returns:
+
+*/   
    PROCEDURE eq (
       msg_in            IN   VARCHAR2,
       check_this_in     IN   VARCHAR2,
