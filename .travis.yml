@@ -1,3 +1,5 @@
+#setting language to bash since we are just running scripts
+language: bash
 sudo: required
 env:
   global:
@@ -6,9 +8,14 @@ env:
   - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
   - ORACLE_SID=XE
 before_install:
-- ".travis/oracle/download.sh"
-- ".travis/oracle/install.sh"
+#ensure executable
+- "chmod +x .travis/*.sh"
+- "chmod +x .travis/travis-oracle/*.sh"
+#download and install oracle
+- ".travis/travis-oracle/download.sh"
+- ".travis/travis-oracle/install.sh"
 install:
+#install this code
 - ".travis/travis_install.sh"
 script:
 - ".travis/travis_unittest.sh"

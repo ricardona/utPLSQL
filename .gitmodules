@@ -1,0 +1,3 @@
+[submodule ".travis/travis-oracle"]
+	path = .travis/travis-oracle
+	url = https://github.com/cbandy/travis-oracle
