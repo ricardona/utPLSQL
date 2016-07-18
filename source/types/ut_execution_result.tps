@@ -1,12 +1,12 @@
 create or replace type ut_execution_result as object
 (
-  test           ut_single_test,
+
   start_time     timestamp with time zone,
   end_time       timestamp with time zone,
   result         integer(1),
   assert_results ut_assert_list,
 
-  constructor function ut_execution_result(a_test ut_single_test, a_start_time timestamp with time zone default current_timestamp) return self as result,
+  constructor function ut_execution_result(a_start_time timestamp with time zone default current_timestamp) return self as result,
   member function result_to_char(self in ut_execution_result) return varchar2
 )
 not final

@@ -23,8 +23,8 @@ create or replace package body ut_dbms_output_reporter as
   procedure end_test(a_test in ut_single_test, a_result ut_execution_result, a_in_suite in boolean) as
   begin
     dbms_output.put_line(c_dashed_line);
-    dbms_output.put_line('test  ' || nvl(a_result.test.owner_name, '') || nvl(a_result.test.object_name, '') || '.' ||
-                         nvl(a_result.test.test_procedure, ''));
+    dbms_output.put_line('test  ' || nvl(a_test.owner_name, '') || nvl(a_test.object_name, '') || '.' ||
+                         nvl(a_test.test_procedure, ''));
     dbms_output.put_line('result: ' || ut_types.test_result_to_char(a_result.result));
     dbms_output.put_line('asserts');
     for i in a_result.assert_results.first .. a_result.assert_results.last loop

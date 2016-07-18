@@ -6,6 +6,7 @@ create or replace type ut_single_test as object
   owner_name         varchar2(32 char),
   setup_procedure    varchar2(32 char),
   teardown_procedure varchar2(32 char),
+	test_result        ut_execution_result,
 
   constructor function ut_single_test(a_object_name varchar2, a_test_procedure varchar2, a_owner_name varchar2 default null, a_setup_procedure varchar2 default null, a_teardown_procedure varchar2 default null)
     return self as result,
@@ -14,8 +15,8 @@ create or replace type ut_single_test as object
   member function setup_stmt(self in ut_single_test) return varchar2,
   member function test_stmt(self in ut_single_test) return varchar2,
   member function teardown_stmt(self in ut_single_test) return varchar2,
-	
-	member procedure execute(self in ut_single_test, a_test_result out ut_execution_result)
+
+	member procedure execute(self in out nocopy ut_single_test)
 )
 not final
 /

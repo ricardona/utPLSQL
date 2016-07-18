@@ -30,13 +30,14 @@ create or replace package body ut_assert is
     current_asserts_called.delete;
   end;
 
-  procedure copy_called_asserts(newtable in out ut_assert_list) is
+  procedure process_asserts(newtable out ut_assert_list, result out integer) is
   begin
     $if $$ut_trace $then
     dbms_output.put_line('ut_assert.copy_called_asserts');
     $end
   
-    newtable.delete; -- make sure new table is empty
+    result   := ut_types.tr_success;
+    newtable := ut_assert_list(); -- make sure new table is empty
     newtable.extend(current_asserts_called.last);
     for i in current_asserts_called.first .. current_asserts_called.last loop
       $if $$ut_trace $then
@@ -44,12 +45,20 @@ create or replace package body ut_assert is
       $end
     
       newtable(i) := current_asserts_called(i);
+			
+      if result = ut_types.tr_success and newtable(i).result in (ut_types.tr_failure, ut_types.tr_error) then
+        result := newtable(i).result;
+      elsif result = ut_types.tr_failure and newtable(i).result = ut_types.tr_error then
+        result := ut_types.tr_error;
+      end if;
     
       $if $$ut_trace $then
       dbms_output.put_line(i || '-end');
       $end
     end loop;
-  end;
+		
+		clear_asserts;
+  end process_asserts;
 
   procedure report_assert(assert_result in integer, message in varchar2) is
     v_result ut_assert_result;
