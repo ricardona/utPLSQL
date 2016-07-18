@@ -4,7 +4,7 @@ create or replace package body ut_metadata as
     v_cnt integer;
   begin
     --maybe use DBMS_UTILITY.NAME_RESOLVE first
-  
+
     select count(*)
       into v_cnt
       from all_objects
@@ -12,7 +12,7 @@ create or replace package body ut_metadata as
        and object_name = a_package_name
        and object_type in ('PACKAGE', 'PACKAGE BODY')
        and status = 'VALID';
-  
+
     -- expect both package and body to be valid
     return v_cnt = 2;
   end;
@@ -34,7 +34,7 @@ create or replace package body ut_metadata as
     return v_cnt = 1;
   end;
 
-  function do_resolve(the_owner in out varchar2, the_object in out varchar2, a_procedurename in out varchar2)
+  function do_resolve(the_owner in varchar2, the_object in varchar2, a_procedurename in varchar2)
     return boolean is
     name          varchar2(200);
     context       number;
@@ -45,7 +45,7 @@ create or replace package body ut_metadata as
     part1_type    number;
     object_number number;
   begin
-  
+
     name := the_object;
     if trim(the_owner) is not null then
       name := trim(the_owner) || '.' || name;
@@ -53,9 +53,9 @@ create or replace package body ut_metadata as
     if trim(a_procedurename) is not null then
       name := name || '.' || a_procedurename;
     end if;
-  
+
     context := 1; --plsql
-  
+
     dbms_utility.name_resolve(name          => name
                              ,context       => context
                              ,schema        => schema
@@ -64,11 +64,8 @@ create or replace package body ut_metadata as
                              ,dblink        => dblink
                              ,part1_type    => part1_type
                              ,object_number => object_number);
-    the_owner       := schema;
-    the_object      := part1;
-    a_procedurename := part2;
     return true;
-  
+
   exception
     when others then
       --replace with correct exception

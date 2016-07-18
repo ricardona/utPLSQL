@@ -85,16 +85,15 @@ create or replace package body ut_test_execute as
   
   end execute_package_test;
 
-  procedure execute_test(a_test_to_execute in ut_single_test, a_test_result out ut_execution_result)
-  
-   as
+  procedure execute_test(a_test_to_execute in ut_single_test, a_test_result out ut_execution_result) as
   begin
     $if $$ut_trace $then
     dbms_output.put_line('ut_execute.execute_test');
     $end
-    a_test_result.test       := a_test_to_execute;
-    a_test_result.start_time := current_timestamp;
+		
+    a_test_result := ut_execution_result(a_test_to_execute);
     execute_package_test(a_test_to_execute);
+  
     a_test_result.end_time       := current_timestamp;
     a_test_result.assert_results := ut_assert_list();
     ut_assert.copy_called_asserts(a_test_result.assert_results);

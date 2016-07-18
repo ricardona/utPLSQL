@@ -11,7 +11,7 @@ create or replace type body ut_single_test is
     return;
   end ut_single_test;
 
-  member function is_valid(self in out nocopy ut_single_test) return boolean is
+  member function is_valid(self in ut_single_test) return boolean is
   begin
     if test_procedure is null then
       return false;
@@ -70,6 +70,88 @@ create or replace type body ut_single_test is
       return object_name || '.' || teardown_procedure;
     end if;
   end teardown_stmt;
+
+  member procedure execute(self in ut_single_test, a_test_result out ut_execution_result) is
+  
+    procedure execute_procedure(a_owner_name in varchar2, a_package_name in varchar2, a_procedure_name in varchar2) as
+      obj_data     user_objects%rowtype;
+      stmt         varchar2(150); --128 plus some extra
+      execute_stmt boolean := true;
+    begin
+      $if $$ut_trace $then
+      dbms_output.put_line('ut_execute.execute_procedure');
+      $end
+    
+      if execute_stmt then
+        stmt := trim(a_package_name) || '.' || trim(a_procedure_name);
+        if trim(a_owner_name) is not null then
+          stmt := trim(a_owner_name) || '.' || stmt;
+        end if;
+        stmt := 'begin ' || stmt || '; end;';
+      
+        $if $$ut_trace $then
+        dbms_output.put_line('execute_procedure stmt:' || stmt);
+        $end
+      
+        execute immediate stmt;
+      end if;
+    end;
+  
+    procedure execute_package_test is
+    begin
+      $if $$ut_trace $then
+      dbms_output.put_line('execute_package_test ' || a_test_to_execute.owner_name || '.' ||
+                           a_test_to_execute.object_name || '.' || a_test_to_execute.test_procedure);
+      $end
+    
+      if not self.is_valid then
+        ut_assert.report_error('Single_Test is not invalid: ');
+        return;
+      end if;
+    
+      if not ut_metadata.package_valid(self.owner_name, self.object_name) then
+        ut_assert.report_error('package does not exist or is invalid: ' ||
+                               nvl(self.object_name, '<missing package name>'));
+        return;
+      end if;
+    
+      if not ut_metadata.procedure_exists(self.owner_name, self.object_name, self.setup_procedure) then
+        ut_assert.report_error('package missing setup method ' || self.object_name || '.' ||
+                               nvl(self.setup_procedure, '<missing procedure name>'));
+        return;
+      end if;
+    
+      if not ut_metadata.procedure_exists(self.owner_name, self.object_name, self.test_procedure) then
+        ut_assert.report_error('package missing test method ' || self.object_name || '.' ||
+                               nvl(self.test_procedure, '<missing procedure name>'));
+        return;
+      end if;
+    
+      if not ut_metadata.procedure_exists(self.owner_name, self.object_name, self.teardown_procedure) then
+        ut_assert.report_error('package missing teardown method ' || self.object_name || '.' ||
+                               nvl(self.teardown_procedure, '<missing procedure name>'));
+        return;
+      end if;
+    
+      execute_procedure(self.owner_name, self.object_name, self.setup_procedure);
+      begin
+        execute_procedure(self.owner_name, self.object_name, self.test_procedure);
+      exception
+        when others then
+          -- dbms_utility.format_error_backtrace is 10g or later
+          -- utl_call_stack package may be better but it's 12c but still need to investigate
+          -- article with details: http://www.oracle.com/technetwork/issue-archive/2014/14-jan/o14plsql-2045346.html
+          $if $$ut_trace $then
+          dbms_output.put_line('testmethod failed-' || sqlerrm(sqlcode) || ' ' || dbms_utility.format_error_backtrace);
+          $end
+          ut_assert.report_error(sqlerrm(sqlcode) || ' ' || dbms_utility.format_error_backtrace);
+      end;
+      execute_procedure(self.owner_name, self.object_name, self.teardown_procedure);
+    
+    end;
+  begin
+    null;
+  end execute;
 
 end;
 /

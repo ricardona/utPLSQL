@@ -19,6 +19,7 @@
 @@ut_types.pkb
 @@types/ut_single_test.tpb
 @@types/ut_assert_result.tpb
+@@types/ut_test_suite.tpb
 @@types/ut_suite_reporter.tpb
 @@types/ut_execution_result.tpb
 @@ut_metadata.pkb
