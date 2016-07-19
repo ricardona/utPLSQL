@@ -1,14 +1,8 @@
 drop package ut_test_runner;
 
---drop package ut_test_execute;
-
 drop package ut_assert;
 
---drop package ut_reporter_execution;
-
 drop package ut_metadata;
-
---drop package ut_dbms_output_suite_reporter;
 
 drop package ut_types;
 
@@ -18,11 +12,7 @@ drop type ut_complex_suite_reporter;
 
 drop type ut_suite_reporters force;
 
---drop type ut_suite_results;
-
 drop type ut_test_suite;
-
---drop type ut_test_list;
 
 drop type ut_test_objects_list;
 
