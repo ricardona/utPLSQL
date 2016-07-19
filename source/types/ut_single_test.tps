@@ -1,12 +1,15 @@
-create or replace type ut_single_test under ut_test_object
+create or replace type ut_single_test force under ut_test_object
 (
 
-  object_name        varchar2(32 char),
+  /*
+	object_name        varchar2(32 char),
   test_procedure     varchar2(32 char),
   owner_name         varchar2(32 char),
   setup_procedure    varchar2(32 char),
   teardown_procedure varchar2(32 char),
-  test_result        ut_execution_result,
+	*/
+	call_params ut_test_call_params,
+  assert_results ut_assert_list,
 
   constructor function ut_single_test(a_object_name varchar2, a_test_procedure varchar2, a_name in varchar2 default null, a_owner_name varchar2 default null, a_setup_procedure varchar2 default null, a_teardown_procedure varchar2 default null)
     return self as result,
@@ -16,7 +19,7 @@ create or replace type ut_single_test under ut_test_object
   member function test_stmt(self in ut_single_test) return varchar2,
   member function teardown_stmt(self in ut_single_test) return varchar2,
 
-  overriding member procedure run(self in out ut_single_test),
+  --member procedure run(self in out ut_single_test),
   overriding member procedure execute(self in out nocopy ut_single_test, a_reporter in ut_suite_reporter),
   overriding member procedure execute(self in out nocopy ut_single_test)
 

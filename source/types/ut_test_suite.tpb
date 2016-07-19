@@ -14,16 +14,21 @@ create or replace type body ut_test_suite is
     self.items(self.items.last) := a_item;
   end add_test;
 
-  member procedure execute_tests(self in out nocopy ut_test_suite, a_reporter in ut_suite_reporter) is
+  overriding member procedure execute(self in out nocopy ut_test_suite, a_reporter in ut_suite_reporter) is
   begin
-    a_reporter.begin_suite(self);
-    self.execute_tests(ut_suite_reporters(a_reporter));
-		a_reporter.end_suite(self);
+    a_reporter.begin_suite(self.name);
+		
+		for i in self.items.first..self.items.last loop
+			self.items(i).execute(a_reporter => a_reporter);
+			end loop;
+			
+		a_reporter.end_suite(self.name, self.execution_result);
   end;
 
-  member procedure execute_tests(self in out nocopy ut_test_suite) is
+  overriding member procedure execute(self in out nocopy ut_test_suite) is
   begin
-    self.execute_tests(ut_reporter_execution.get_default_reporter);
+	  null;
+    --self.execute_tests(ut_reporter_execution.get_default_reporter);
   end;
 
 end;

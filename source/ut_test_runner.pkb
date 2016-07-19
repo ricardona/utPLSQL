@@ -16,8 +16,13 @@ create or replace package body ut_test_runner as
       end if;
     end if;
   end;*/
+	
+  function get_default_reporter return ut_suite_reporter is
+  begin
+    return ut_dbms_output_suite_reporter();
+  end get_default_reporter;
 
-  procedure execute_tests(a_suite in ut_test_suite, a_reporters in ut_suite_reporters, a_results out ut_suite_results) as
+  /*procedure execute_tests(a_suite in ut_test_suite, a_reporters in ut_suite_reporters, a_results out ut_suite_results) as
     test_result ut_execution_result;
   begin
     ut_reporter_execution.begin_suite(a_reporters, a_suite);
@@ -60,6 +65,6 @@ create or replace package body ut_test_runner as
   begin
     execute_test(a_test, testresults, a_in_suite);
   end;
-
+*/
 end;
 /
