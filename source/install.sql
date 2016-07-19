@@ -1,12 +1,13 @@
 @@types/ut_assert_result.tps
 @@types/ut_assert_list.tps
 @@types/ut_execution_result.tps
+@@types/ut_test_object.tps
+@@types/ut_suite_reporter.tps
+@@types/ut_suite_reporters.tps
 @@types/ut_single_test.tps
 @@types/ut_test_list.tps
 @@types/ut_test_suite.tps
 @@types/ut_suite_results.tps
-@@types/ut_suite_reporter.tps
-@@types/ut_suite_reporters.tps
 @@types/ut_dbms_output_suite_reporter.tps
 @@ut_types.pks
 
