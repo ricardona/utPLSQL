@@ -71,7 +71,7 @@ create or replace type body ut_single_test is
     end if;
   end teardown_stmt;
 
-  overriding member procedure run(self in out nocopy ut_test_object) is
+  overriding member procedure run(self in out nocopy ut_single_test) is
     procedure execute_procedure(a_owner_name in varchar2, a_package_name in varchar2, a_procedure_name in varchar2) as
       obj_data     user_objects%rowtype;
       stmt         varchar2(150); --128 plus some extra
@@ -173,21 +173,15 @@ create or replace type body ut_single_test is
       ut_assert.process_asserts(self.test_result.assert_results, self.test_result.result);
   end run;
 
-  overriding member procedure execute(self in out nocopy ut_test_object, a_reporters in ut_suite_reporters) is
-  
+  overriding member procedure execute(self in out nocopy ut_single_test, a_reporter in ref ut_suite_reporter) is
   begin
-    ut_reporter_execution.begin_test(a_reporters => a_reporters, a_test => self, a_in_suite => a_in_suite);
-  
+    a_reporter.begin_test(self);
+		utl_ref.select_object(
     self.run;
-    ut_reporter_execution.end_test(a_reporters => a_reporters, a_test => self, a_in_suite => a_in_suite);
+    a_reporter.end_test(self);
   end;
 
-  overriding member procedure execute(self in out nocopy ut_test_object, a_reporter in ut_suite_reporter) is
-  begin
-    self.execute(ut_suite_reporters(a_reporter));
-  end;
-
-  overriding member procedure execute(self in out nocopy ut_test_object) is
+  overriding member procedure execute(self in out nocopy ut_single_test) is
   begin
     self.execute(ut_reporter_execution.get_default_reporters);
   end execute;

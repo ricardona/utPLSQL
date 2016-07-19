@@ -1,13 +1,14 @@
-create or replace type ut_test_suite as object
+create or replace type ut_test_suite under ut_test_object
 (
-  suite_name varchar2(50 char),
-  tests      ut_test_list,
+  --suite_name varchar2(50 char),
+  items      ut_test_objects_list,
 
-	constructor function ut_test_suite(a_suite_name varchar2, a_tests ut_test_list default ut_test_list()) return self as result,
-	member procedure add_test(self in out nocopy ut_test_suite, a_test ut_single_test),
-	member procedure execute_tests(self int out nocopy ut_test_suite, a_reporters in ut_suite_reporters),
-	member procedure execute_tests(self int out nocopy ut_test_suite, a_reporter in ut_suite_reporter),
-	member procedure execute_tests(self int out nocopy ut_test_suite)
+	constructor function ut_test_suite(a_suite_name varchar2, a_items ut_test_objects_list default ut_test_objects_list()) return self as result,
+	member procedure add_test(self in out nocopy ut_test_suite, a_item ut_test_object),
+
+  overriding member procedure run(self in out nocopy ut_test_suite),
+	overriding member procedure execute(self in out nocopy ut_test_suite, a_reporter in ref ut_suite_reporter),
+	overriding member procedure execute(self in out nocopy ut_test_suite)
 )
 not final
 /

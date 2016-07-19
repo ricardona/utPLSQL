@@ -1,38 +1,29 @@
 create or replace type body ut_test_suite is
 
-  constructor function ut_test_suite(a_suite_name varchar2, a_tests ut_test_list default ut_test_list())
+  constructor function ut_test_suite(a_suite_name varchar2, a_items ut_test_objects_list default ut_test_objects_list())
     return self as result is
   begin
-    self.suite_name := a_suite_name;
-    self.tests      := a_tests;
+    self.name := a_suite_name;
+    self.items      := a_items;
     return;
   end ut_test_suite;
 
-  member procedure add_test(self in out nocopy ut_test_suite, a_test ut_single_test) is
+  member procedure add_test(self in out nocopy ut_test_suite, a_item ut_test_object) is
   begin
-    self.tests.extend;
-    self.tests(self.tests.last) := a_test;
+    self.items.extend;
+    self.items(self.items.last) := a_item;
   end add_test;
 
-  member procedure execute_tests(self int out nocopy ut_test_suite, a_reporters in ut_suite_reporters) is
+  member procedure execute_tests(self in out nocopy ut_test_suite, a_reporter in ut_suite_reporter) is
   begin
-    ut_reporter_execution.begin_suite(a_reporters, self);
-  
-    for i in a_suite.tests.first .. a_suite.tests.last loop
-      a_suite.tests(i).execute(a_reporters, true);
-    end loop;
-  
-    ut_reporter_execution.end_suite(a_reporters, self);
-  end;
-	
-  member procedure execute_tests(self int out nocopy ut_test_suite, a_reporter in ut_suite_reporter) is
-  begin
+    a_reporter.begin_suite(self);
     self.execute_tests(ut_suite_reporters(a_reporter));
+		a_reporter.end_suite(self);
   end;
-	
-  member procedure execute_tests(self int out nocopy ut_test_suite) is
+
+  member procedure execute_tests(self in out nocopy ut_test_suite) is
   begin
-    self.execute_tests(ut_reporter_execution.get_default_reporters);
+    self.execute_tests(ut_reporter_execution.get_default_reporter);
   end;
 
 end;
