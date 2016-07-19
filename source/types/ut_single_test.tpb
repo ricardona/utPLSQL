@@ -154,10 +154,13 @@ create or replace type body ut_single_test is
     end execute_package_test;
   
   begin
-    a_reporter.begin_test(a_test_name => self.name, a_test_call_params => self.call_params);
+    if a_reporter is not null then
+      a_reporter.begin_test(a_test_name => self.name, a_test_call_params => self.call_params);
+    end if;
+  
     begin
       $if $$ut_trace $then
-      dbms_output.put_line('ut_single_test.run');
+      dbms_output.put_line('ut_single_test.execute');
       $end
     
       self.execution_result := ut_execution_result();
@@ -171,7 +174,7 @@ create or replace type body ut_single_test is
     exception
       when others then
         $if $$ut_trace $then
-        dbms_output.put_line('execute_test failed-' || sqlerrm(sqlcode) || ' ' || dbms_utility.format_error_backtrace);
+        dbms_output.put_line('ut_single_test.execute failed-' || sqlerrm(sqlcode) || ' ' || dbms_utility.format_error_backtrace);
         $end
         -- most likely occured in setup or teardown if here.
         ut_assert.report_error(sqlerrm(sqlcode) || ' ' || dbms_utility.format_error_stack);
@@ -179,16 +182,17 @@ create or replace type body ut_single_test is
         ut_assert.process_asserts(self.assert_results, self.execution_result.result);
     end;
   
-    a_reporter.end_test(a_test_name        => self.name
-                       ,a_test_call_params => self.call_params
-                       ,a_execution_result => self.execution_result
-                       ,a_assert_list      => self.assert_results);
+    if a_reporter is not null then
+      a_reporter.end_test(a_test_name        => self.name
+                         ,a_test_call_params => self.call_params
+                         ,a_execution_result => self.execution_result
+                         ,a_assert_list      => self.assert_results);
+    end if;
   end;
 
   overriding member procedure execute(self in out nocopy ut_single_test) is
   begin
-    null;
-    --self.execute(ut_reporter_execution.get_default_reporters);
+    self.execute(cast(null as ut_suite_reporter));
   end execute;
 
 end;

@@ -51,6 +51,8 @@ create or replace package body ut_assert is
       elsif result = ut_types.tr_failure and newtable(i).result = ut_types.tr_error then
         result := ut_types.tr_error;
       end if;
+			
+			exit when result = ut_types.tr_error;
     
       $if $$ut_trace $then
       dbms_output.put_line(i || '-end');
@@ -66,9 +68,7 @@ create or replace package body ut_assert is
     $if $$ut_trace $then
     dbms_output.put_line('ut_assert.report_assert :' || assert_result || ':' || message);
     $end
-  
-    v_result.result  := assert_result;
-    v_result.message := message;
+    v_result := ut_assert_result(assert_result,message);
     current_asserts_called.extend;
     current_asserts_called(current_asserts_called.last) := v_result;
   end;
