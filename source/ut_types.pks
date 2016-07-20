@@ -10,9 +10,10 @@ create or replace package ut_types as
     tr_failure - one or more asserts failed
     tr_error   - exception was raised
   */
-  tr_success constant number(1) := 1; -- test passed
-  tr_failure constant number(1) := 2; -- one or more asserts failed
-  tr_error   constant number(1) := 3; -- exception was raised
+  tr_success     constant number(1) := 1; -- test passed
+  tr_failure     constant number(1) := 2; -- one or more asserts failed
+  tr_error       constant number(1) := 3; -- exception was raised
+	tr_not_valid   constant number(1) := 4; -- exception was raised
 
   /* Type: test_result
     a type defined to hold one of <tr_success> <tr_failure> or <tr_error>

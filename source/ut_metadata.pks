@@ -5,6 +5,8 @@ create or replace package ut_metadata as
     Common place for all code that reads from the system tables.
   
   */
+	
+	function form_name(a_owner_name varchar2, a_object varchar2, a_subprogram varchar2 default null) return varchar2;
 
   /*
     function: package_valid
