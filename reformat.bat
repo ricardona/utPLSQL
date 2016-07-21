@@ -1,0 +1,1 @@
+for /R source %%i in (*.pks *.pkb *.tps *.tpb) do C:\Apps\sqldeveloper\sqldeveloper\bin\sdcli format input=%%i output=%%i
