@@ -1,21 +1,24 @@
 
 sudo: required
 
+services:
+  - docker
+
 env:
   global:
-    - ORACLE_COOKIE=sqldev
-    - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
     - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
     - ORACLE_SID=XE
 
 # whitelist
 
 before_install:
-  - .travis/oracle/download.sh
-  - .travis/oracle/install.sh
+  - docker pull $DOCKER_IMAGE
+  - docker create --name=oracle-xe-11g -it $DOCKER_IMAGE
+  - docker start oracle-xe-11g
+  - docker cp ../utPLSQL oracle-xe-11g:/
 
 install:
-  - .travis/travis_install.sh
+  - docker exec -u oracle oracle-xe-11g /bin/bash -c "export ORACLE_HOME=$ORACLE_HOME && export ORACLE_SID=XE && cd /utPLSQL && .travis/wait_db_up.sh &&  .travis/travis_install.sh"
 
 #run unit tests here
 script: ls
